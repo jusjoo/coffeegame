@@ -4,6 +4,8 @@ package ec;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
 /**
  * Entity, which holds => 0 amount of components.
  * 
@@ -19,6 +21,11 @@ public class Entity {
 	private HashMap<Class<? extends Component>, Component> components = new HashMap<Class<? extends Component>, Component>();
 	
 	/*
+	 * Holds renderable components
+	 */
+	private ArrayList<Renderable> renderables = new ArrayList<Renderable>();
+	
+	/*
 	 * Holds all messaging system subscriptions
 	 */
 	private HashMap<String, ArrayList<Component>> subscriptions = new HashMap<String, ArrayList<Component>>();
@@ -26,14 +33,27 @@ public class Entity {
 
 	public void addComponent(Component c) {	
 		components.put(c.getClass(), c);
+		
+		if (c instanceof Renderable) {
+			renderables.add((Renderable) c);
+		}
 	}
 	
 	public void remove(Class<? extends Component> componentClass) {
+		Component c = components.get(componentClass);
 		components.remove(componentClass);
+		
+		if (c instanceof Renderable) {
+			renderables.remove((Renderable) c);
+		}
 	}
 	
 	public void remove(Component c) {
 		components.remove(c.getClass());
+		
+		if (c instanceof Renderable) {
+			renderables.remove((Renderable) c);
+		}
 	}
 	
 	/**
@@ -46,7 +66,15 @@ public class Entity {
 		}
 	}
 	
-
+	/**
+	 * Renders all renderable components
+	 */
+	public void render(SpriteBatch spriteBatch) {
+		for (Renderable r: renderables) {
+			r.render(spriteBatch);
+		}
+	}
+	
 	/**
 	 * Broadcasts the message to all components that have subscribed to that messageType.
 	 * 
@@ -91,6 +119,8 @@ public class Entity {
 	}
 	
 	
+	
+	
 	public static void main(String[] args) {
 		
 		// Test messaging
@@ -108,7 +138,5 @@ public class Entity {
 		
 		// Should print a warning about no subscribers for messagetype
 		c2.broadcast("nosubscribersforthistype", "dataa tähän");
-
-		
 	}
 }
