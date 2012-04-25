@@ -43,6 +43,7 @@ public class Main implements ApplicationListener{
 		
 	}
 	
+	//trolololo
 	public static void main (String[] args) {
 		new LwjglApplication(new Main(), "Game", Config.windowSizeX, Config.windowSizeY, false);
 	}
