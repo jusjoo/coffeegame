@@ -4,8 +4,11 @@
   <image source="mrEggTiles.png" width="416" height="16"/>
  </tileset>
  <objectgroup name="Ground" width="1000" height="1000">
-  <object x="55" y="70">
-   <polygon points="0,0 17,30 51,30 61,0"/>
+  <object x="384" y="125">
+   <polygon points="0,0 48,38 49,106 -51,102 -80,16 -61,-23"/>
+  </object>
+  <object x="0" y="-11">
+   <polygon points="0,0 10,7 1,20 -14,11"/>
   </object>
  </objectgroup>
 </map>

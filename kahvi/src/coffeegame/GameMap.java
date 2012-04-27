@@ -2,10 +2,16 @@ package coffeegame;
 
 import java.util.ArrayList;
 
+
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.VertexAttribute;
+import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.tiled.SimpleTileAtlas;
@@ -46,6 +52,7 @@ public class GameMap {
 	
 	public GameMap(FileHandle mapFile) {
 		
+		worldEntities = new ArrayList<Entity>();
 		debugTexture = new Texture(Gdx.files.internal("assets/maps/mrEggEverything.png"));
 		debugSprite = new Sprite(debugTexture);
 		
@@ -73,21 +80,36 @@ public class GameMap {
 			
 				// TODO: Add a check for the proper object group name
 				for (TiledObject object : group.objects) {
-										
-					Debug.log(object.polygon);
-					PolygonShape shape = createPolygonShape(object.polygon);
 					
+					Vector2 position = new Vector2(object.x, object.y);
+					
+					// parse vertices from the string
+					Vector2[] vertices = getPolygonVertices(object.polygon);
+					
+					PolygonShape shape = new PolygonShape();
+					shape.set(vertices);
+					
+					
+					Mesh mesh = new Mesh(true, 50, 50, new VertexAttribute(Usage.Position, 3, "a_position"), new VertexAttribute(Usage.ColorPacked, 4, "a_color"));
+					
+					
+					
+					mesh.setVertices(getMeshVertices(vertices));
+					Texture texture = new Texture(Gdx.files.internal("assets/maps/mrEggEverything.png"));
 							
 							//createPolygonShape(object.polygon);
 					
 					
 					Entity entity = new Entity();
 					
-					Vector2 position = new Vector2(object.x, object.y);
+					
 					
 					Debug.log(shape.toString());
 					new PhysicsBody(entity, shape, physicsWorld, position);
+					//new MeshRenderer(entity, mesh, texture, position);
 					
+					
+					worldEntities.add(entity);
 					
 				}
 			
@@ -95,12 +117,32 @@ public class GameMap {
 	}
 	
 	/**
+	 * Converts Vector2 vertices into float[] vertices
+	 */
+	private float[] getMeshVertices(Vector2[] vertices) {
+		float[] result = new float[vertices.length*4];
+		
+		for (int i=0; i < vertices.length; i++) {
+			result[i*4] = vertices[i].x;
+			result[i*4+1] = vertices[i].y;
+			result[i*4+2] = 0f;
+			result[i*4+3] = Color.toFloatBits(0, 0, 255, 255);
+		}
+		
+		
+		return result;
+	}
+
+
+
+	/**
 	 * Creates a new PolygonShape from a given String of coordinates.
 	 * @param polygon
 	 * @return
 	 */
-	private PolygonShape createPolygonShape(String polygon) {
-		/*PolygonShape shape = new PolygonShape();
+	private Vector2[] getPolygonVertices(String polygon) {
+		
+		
 		
 		
 		ArrayList<Vector2> vectors = new ArrayList<Vector2>();
@@ -108,9 +150,9 @@ public class GameMap {
 		for (String piece :polygon.split(" ")) {
 			String[] coords = piece.split(",");
 			Vector2 vector = new Vector2(Float.parseFloat(coords[0]), Float.parseFloat(coords[1]));
-			if (vector.x != 0 && vector.y != 0) {
-				vectors.add(vector); 
-			}
+			
+			vectors.add(vector); 
+			
 		}
 		
 
@@ -118,28 +160,11 @@ public class GameMap {
 		Vector2[] array = new Vector2[vectors.size()];
 		vectors.toArray(array);
 		
-		shape.set(array);*/
-		
-		Vector2[] vertices = new Vector2[8];
+			
 
-	    vertices[0] = new Vector2(82f  , 0f  );
-	    vertices[1] = new Vector2(146f , 40f  );
-	    vertices[2] = new Vector2(385f , 268f);
-	    vertices[3] = new Vector2(322f , 341f);
-	    vertices[4] = new Vector2(225f , 322f);
-	    vertices[5] = new Vector2(282f , 398f);     
-	    vertices[6] = new Vector2(161f , 457f);
-	    vertices[7] = new Vector2(135f , 298f);
-	    PolygonShape shape = new PolygonShape();
-	    
-	    for (int i=0; i<vertices.length; i++) {
-	    	Debug.log(vertices[i]);
-	    }
-	    
-	    shape.set(vertices);
 		
 		
-		return shape;
+		return array;
 		
 	}
 
@@ -150,15 +175,23 @@ public class GameMap {
 	}
 	
 	public void render(OrthographicCamera cam, SpriteBatch spriteBatch) {
-		debugRenderer.render( physicsWorld, debugCam.combined );
+		debugRenderer.render( physicsWorld, cam.combined.scale(Config.PIXELS_PER_METER, Config.PIXELS_PER_METER,
+				Config.PIXELS_PER_METER) );
 		
 		debugSprite.setPosition(cam.position.x, cam.position.y);
+		
+		spriteBatch.begin();
 		debugSprite.draw(spriteBatch);
 		
-		//spriteBatch.draw(debugTexture, cam.position.x, cam.position.y);
+		for (Entity e: worldEntities) {
+			e.render(spriteBatch);
+		}
 		
+		spriteBatch.end();
 		
 		tileMapRenderer.render(cam);
+		
+		
 	}
 
 }

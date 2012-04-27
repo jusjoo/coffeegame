@@ -31,8 +31,10 @@ public class Main implements ApplicationListener{
 		cam.update();
 
 		spriteBatch.setProjectionMatrix(cam.combined);
+		spriteBatch.enableBlending();
 		
-		loadMap(Gdx.files.internal("assets/testimap.tmx"));
+		
+		loadMap(Gdx.files.internal("assets/maps/testimap.tmx"));
 	}
 
 	@Override
@@ -51,12 +53,15 @@ public class Main implements ApplicationListener{
 	public void render() {
 		Gdx.graphics.setTitle(Integer.toString(Gdx.graphics.getFramesPerSecond()));
 		
-		Gdx.gl.glClearColor(0, 0, 0, 1.0f);
+		float colourMultiplier = 1;
+		Gdx.gl.glClearColor(0.5f*colourMultiplier, 0.7f*colourMultiplier, 0.88f*colourMultiplier, 1.0f);
+		
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		
 		cam.update();
 		
 		
-		spriteBatch.begin();
+		
 		
 		
 		// check if we have a map loaded and game is not paused
@@ -65,7 +70,7 @@ public class Main implements ApplicationListener{
 			update();
 		}
 		
-		spriteBatch.end();
+		
 	}
 
 	private void update() {
