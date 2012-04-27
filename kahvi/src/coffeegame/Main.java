@@ -43,7 +43,7 @@ public class Main implements ApplicationListener{
 		
 	}
 	
-	//trolololo & toinen trolollo
+	//trolololo & toinen trolollo & kolmas oolololkoasdadf
 	public static void main (String[] args) {
 		new LwjglApplication(new Main(), "Game", Config.windowSizeX, Config.windowSizeY, false);
 	}
