@@ -7,6 +7,7 @@ public class Component {
 	
 	public Component(Entity parent) {
 		this.parent = parent;
+		parent.addComponent(this);
 	}
 	
 	

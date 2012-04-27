@@ -1,38 +1,38 @@
 package coffeegame;
 
-
-
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 
 
 public class Main implements ApplicationListener{
 
 	private SpriteBatch spriteBatch;
-	private Box2DDebugRenderer debugRenderer;
-	private Camera cam;
+	
+	private OrthographicCamera cam;
 	private GameMap currentMap;
+	
 	
 	@Override
 	public void create() {
 		
 		spriteBatch = new SpriteBatch();
+		
 		cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+				
+		cam.position.x = 0;
+		cam.position.y = 0;
 		
-		
-		cam.position.x = Gdx.graphics.getWidth()/4;
-		cam.position.y = Gdx.graphics.getHeight()/4;
 		cam.update();
-		debugRenderer = new Box2DDebugRenderer();
-		
-		
+
 		spriteBatch.setProjectionMatrix(cam.combined);
+		
+		loadMap(Gdx.files.internal("assets/testimap.tmx"));
 	}
 
 	@Override
@@ -56,11 +56,16 @@ public class Main implements ApplicationListener{
 		cam.update();
 		
 		
+		spriteBatch.begin();
+		
+		
 		// check if we have a map loaded and game is not paused
 		if (currentMap != null) {
+			currentMap.render(cam, spriteBatch);
 			update();
 		}
 		
+		spriteBatch.end();
 	}
 
 	private void update() {
@@ -84,11 +89,13 @@ public class Main implements ApplicationListener{
 		
 	}
 	
-	public void loadMap() {
+	public void loadMap(FileHandle mapFile) {
+		currentMap = new GameMap(mapFile);
+		
 		
 	}
 	
-	//trolololo & toinen trolollo & kolmas oolololkoasdadf
+	
 	public static void main (String[] args) {
 		new LwjglApplication(new Main(), "Game", Config.windowSizeX, Config.windowSizeY, false);
 	}

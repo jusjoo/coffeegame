@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="1000" height="1000" tilewidth="1" tileheight="1">
+ <tileset firstgid="1" name="mrEggTiles" tilewidth="1" tileheight="1">
+  <image source="mrEggTiles.png" width="416" height="16"/>
+ </tileset>
+ <objectgroup name="Ground" width="1000" height="1000">
+  <object x="55" y="70">
+   <polygon points="0,0 17,30 51,30 61,0"/>
+  </object>
+ </objectgroup>
+</map>
