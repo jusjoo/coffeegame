@@ -90,24 +90,23 @@ public class GameMap {
 					shape.set(vertices);
 					
 					
-					Mesh mesh = new Mesh(true, 50, 50, new VertexAttribute(Usage.Position, 3, "a_position"), new VertexAttribute(Usage.ColorPacked, 4, "a_color"));
+					Mesh mesh = new Mesh(true, 50, 50, new VertexAttribute(Usage.Position, 3, "a_position"));
 					
 					
 					
 					mesh.setVertices(getMeshVertices(vertices));
+					
 					Texture texture = new Texture(Gdx.files.internal("assets/maps/mrEggEverything.png"));
 							
 							//createPolygonShape(object.polygon);
 					
 					
 					Entity entity = new Entity();
-					
-					
-					
+
 					Debug.log(shape.toString());
 					new PhysicsBody(entity, shape, physicsWorld, position);
-					//new MeshRenderer(entity, mesh, texture, position);
 					
+					new MeshRenderer(entity, mesh, texture, position);
 					
 					worldEntities.add(entity);
 					
@@ -120,13 +119,13 @@ public class GameMap {
 	 * Converts Vector2 vertices into float[] vertices
 	 */
 	private float[] getMeshVertices(Vector2[] vertices) {
-		float[] result = new float[vertices.length*4];
+		float[] result = new float[vertices.length*3];
 		
 		for (int i=0; i < vertices.length; i++) {
-			result[i*4] = vertices[i].x;
-			result[i*4+1] = vertices[i].y;
-			result[i*4+2] = 0f;
-			result[i*4+3] = Color.toFloatBits(0, 0, 255, 255);
+			result[i*3] = vertices[i].x;
+			result[i*3+1] = vertices[i].y;
+			result[i*3+2] = 0f;
+			
 		}
 		
 		
