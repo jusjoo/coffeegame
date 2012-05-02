@@ -72,18 +72,17 @@ public class Main implements ApplicationListener{
 		
 		
 		// testing
-		Vector2 position = new Vector2(0,0);
+		Vector2 position = new Vector2(0f,0f);
 		Entity e = new Entity();
-      
+   
 		new SpriteRenderer(e, new Sprite(texture));
 		new PhysicsBody(e, ShapeFactory.createBox(texture.getWidth(), texture.getHeight()), currentMap.physicsWorld, position, true );
-		
 		currentMap.addEntity(e);
 		
 		Entity e2 = new Entity();
 		Vector2 pos2 = new Vector2(1.5f,3);
 		new SpriteRenderer(e2, new Sprite(texture));
-		new PhysicsBody(e, ShapeFactory.createBox(texture.getWidth(), texture.getHeight()), currentMap.physicsWorld, pos2, false);
+		new PhysicsBody(e2, ShapeFactory.createBox(texture.getWidth(), texture.getHeight()), currentMap.physicsWorld, pos2, false);
 		currentMap.addEntity(e2);
 		
 	}

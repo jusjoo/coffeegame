@@ -27,6 +27,8 @@ public class SpriteRenderer extends Component implements Renderable {
 		
 		this.offset = offset.cpy();
 		this.offset.add(getStaticOffset());
+		
+		updateSpritePosition();
 	}
 
 
@@ -35,7 +37,10 @@ public class SpriteRenderer extends Component implements Renderable {
 		
 		
 		this.sprite  = sprite;
+		
 		this.offset = getStaticOffset();
+		
+		updateSpritePosition();
 	}
 
 
@@ -44,10 +49,15 @@ public class SpriteRenderer extends Component implements Renderable {
 		// set position and rotation according to the entity
 		sprite.setRotation((float) (parent.transform.getRotation()*180/Math.PI));
 		
-		Vector2 position = parent.transform.getPosition();
-		sprite.setPosition(position.x + offset.x, position.y + offset.y);
+		
+		updateSpritePosition();
 		sprite.setScale(1/Config.PIXELS_PER_METER);
 		sprite.draw(spriteBatch);
+	}
+	
+	private void updateSpritePosition() {
+		Vector2 position = parent.transform.getPosition();
+		sprite.setPosition(position.x + offset.x, position.y + offset.y);
 	}
 	
 	/*
@@ -56,5 +66,7 @@ public class SpriteRenderer extends Component implements Renderable {
 	private Vector2 getStaticOffset() {
 		return new Vector2(-sprite.getWidth()/2, -sprite.getHeight()/2);
 	}
+	
+	
 
 }
