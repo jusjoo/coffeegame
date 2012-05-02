@@ -46,7 +46,7 @@ public class SpriteRenderer extends Component implements Renderable {
 		
 		Vector2 position = parent.transform.getPosition();
 		sprite.setPosition(position.x + offset.x, position.y + offset.y);
-		
+		sprite.setScale(1/Config.PIXELS_PER_METER);
 		sprite.draw(spriteBatch);
 	}
 	

@@ -15,7 +15,9 @@ public class ShapeFactory {
 	public static PolygonShape createBox(float width, float height) {
 		
 		PolygonShape shape = new PolygonShape();
-		shape.setAsBox(width /2, height/2);
+		float PIXELS_PER_METER = Config.PIXELS_PER_METER;
+		
+		shape.setAsBox(width / (PIXELS_PER_METER * 2), height/(PIXELS_PER_METER * 2));
 		
 		return shape;
 	}

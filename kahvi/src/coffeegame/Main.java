@@ -39,6 +39,10 @@ public class Main implements ApplicationListener{
 		spriteBatch = new SpriteBatch();
 		
 		cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		
+		// scale the viewport according to our metric scale
+		cam.viewportHeight = cam.viewportHeight/Config.PIXELS_PER_METER;
+		cam.viewportWidth = cam.viewportWidth/Config.PIXELS_PER_METER;
 				
 		cam.position.x = 0;
 		cam.position.y = 0;
@@ -77,7 +81,7 @@ public class Main implements ApplicationListener{
 		currentMap.addEntity(e);
 		
 		Entity e2 = new Entity();
-		Vector2 pos2 = new Vector2(100,200);
+		Vector2 pos2 = new Vector2(1.5f,3);
 		new SpriteRenderer(e2, new Sprite(texture));
 		new PhysicsBody(e, ShapeFactory.createBox(texture.getWidth(), texture.getHeight()), currentMap.physicsWorld, pos2, false);
 		currentMap.addEntity(e2);
@@ -136,7 +140,7 @@ public class Main implements ApplicationListener{
 
 	private void update() {
 		
-		currentMap.physicsWorld.step(0.15f, 3, 3);
+		currentMap.physicsWorld.step(1/60f, 3, 3);
 		
 		float deltaTime = Gdx.graphics.getDeltaTime();
 		
