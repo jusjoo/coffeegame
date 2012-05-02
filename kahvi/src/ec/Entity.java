@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.physics.box2d.Transform;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
 /**
  * Entity, which holds => 0 amount of components.
@@ -13,7 +16,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  * without direct references. 
  * 
  */
-public class Entity {
+public class Entity{
+	
+
+	public Transform transform;
 	
 	/*
 	 * Holds all attached components
@@ -31,6 +37,14 @@ public class Entity {
 	private HashMap<String, ArrayList<Component>> subscriptions = new HashMap<String, ArrayList<Component>>();
 	
 
+	public Entity() {
+		transform = new Transform();
+	}
+	
+	public void setTransform(Transform t) {
+		transform = t;
+	}
+	
 	public void addComponent(Component c) {	
 		components.put(c.getClass(), c);
 		
@@ -66,14 +80,6 @@ public class Entity {
 		}
 	}
 	
-	/**
-	 * Renders all renderable components
-	 */
-	public void render(SpriteBatch spriteBatch) {
-		for (Renderable r: renderables) {
-			r.render(spriteBatch);
-		}
-	}
 	
 	/**
 	 * Broadcasts the message to all components that have subscribed to that messageType.
@@ -139,4 +145,15 @@ public class Entity {
 		// Should print a warning about no subscribers for messagetype
 		c2.broadcast("nosubscribersforthistype", "dataa tähän");
 	}
+
+	
+	public void render(SpriteBatch batch) {
+		
+		for (Renderable r: renderables) {
+			r.render(batch);
+		}
+		
+	}
+
+
 }

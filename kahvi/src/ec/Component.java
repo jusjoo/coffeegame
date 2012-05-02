@@ -2,7 +2,7 @@ package ec;
 
 public class Component {
 
-	private Entity parent;
+	protected Entity parent;
 	
 	
 	public Component(Entity parent) {
@@ -21,7 +21,7 @@ public class Component {
 		return parent;
 	}
 
-	/*
+	/**
 	 * If the component subscribes to any messages
 	 * override this method and handle sent messages there.
 	 */

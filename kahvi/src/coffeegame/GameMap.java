@@ -36,7 +36,7 @@ import ec.Entity;
 
 public class GameMap {
 
-	private World physicsWorld;
+	public World physicsWorld;
 	private OrthographicCamera debugCam;
 	private Box2DDebugRenderer debugRenderer;
 	
@@ -50,6 +50,8 @@ public class GameMap {
 	private Texture debugTexture;
 	private Sprite debugSprite;
 	
+	private int tileSize = Config.tileSize;
+	
 	public GameMap(FileHandle mapFile) {
 		
 		worldEntities = new ArrayList<Entity>();
@@ -59,6 +61,8 @@ public class GameMap {
 		// create physics stuff
 		physicsWorld = new World(new Vector2(0.0f, Config.physicsWorldGravity), true);
 		physicsWorld.setContactListener(new KahviContactListener());
+		
+		
 		debugCam = new OrthographicCamera( 24, 16 );
 		debugRenderer = new Box2DDebugRenderer(true,true,true,true);
 		
@@ -76,61 +80,43 @@ public class GameMap {
 	
 	private void createGround() {
 		
-		for (TiledObjectGroup group :map.objectGroups) {
-			
-				// TODO: Add a check for the proper object group name
-				for (TiledObject object : group.objects) {
-					
-					Vector2 position = new Vector2(object.x, object.y);
-					
-					// parse vertices from the string
-					Vector2[] vertices = getPolygonVertices(object.polygon);
-					
-					PolygonShape shape = new PolygonShape();
-					shape.set(vertices);
-					
-					
-					Mesh mesh = new Mesh(true, 50, 50, new VertexAttribute(Usage.Position, 3, "a_position"));
-					
-					
-					
-					mesh.setVertices(getMeshVertices(vertices));
-					
-					Texture texture = new Texture(Gdx.files.internal("assets/maps/mrEggEverything.png"));
-							
-							//createPolygonShape(object.polygon);
-					
-					
-					Entity entity = new Entity();
-
-					Debug.log(shape.toString());
-					new PhysicsBody(entity, shape, physicsWorld, position);
-					
-					new MeshRenderer(entity, mesh, texture, position);
-					
-					worldEntities.add(entity);
-					
-				}
-			
+		// find the correct ground layer
+		TiledLayer layer = null;
+		for (TiledLayer l :map.layers) {
+			if(l.name.equals(GROUND_LAYER)){
+				layer = l;
+				break;
+			}
 		}
+		
+		int[][] tiles = layer.tiles;
+					
+			for(int y=0; y<tiles.length; y++) {
+				
+				for(int x=0; x<tiles[y].length; x++) {
+					
+					if(tiles[y][x] != 0) {
+						
+
+							Entity entity = new Entity();
+							PolygonShape shape = new PolygonShape();
+							
+							shape.setAsBox(tileSize / (2 * Config.PIXELS_PER_METER), tileSize / (2 * Config.PIXELS_PER_METER));
+							
+							new PhysicsBody(entity, shape, physicsWorld, new Vector2(x * tileSize, y * tileSize), true);
+							
+									//new BodyComponent(null, new Vector2(tileSize + tileSize*tilesSkipped, tileSize), true, 1.0f, false, shape, false);
+							//tile.addToWorld(world, new Vector2(x*tileSize - (tilesSkipped)*tileSize/2 , -y*tileSize+map.height*tileSize));
+									
+							worldEntities.add(entity);
+							
+						
+					}
+				}
+			}	
 	}
 	
-	/**
-	 * Converts Vector2 vertices into float[] vertices
-	 */
-	private float[] getMeshVertices(Vector2[] vertices) {
-		float[] result = new float[vertices.length*3];
-		
-		for (int i=0; i < vertices.length; i++) {
-			result[i*3] = vertices[i].x;
-			result[i*3+1] = vertices[i].y;
-			result[i*3+2] = 0f;
-			
-		}
-		
-		
-		return result;
-	}
+
 
 
 
@@ -169,18 +155,19 @@ public class GameMap {
 
 
 	public void update(float deltaTime) {
-		// TODO Auto-generated method stub
+		for (Entity e:worldEntities) {
+			e.update(deltaTime);
+		}
 		
 	}
 	
 	public void render(OrthographicCamera cam, SpriteBatch spriteBatch) {
-		debugRenderer.render( physicsWorld, cam.combined.scale(Config.PIXELS_PER_METER, Config.PIXELS_PER_METER,
-				Config.PIXELS_PER_METER) );
 		
-		debugSprite.setPosition(cam.position.x, cam.position.y);
+		
+		//debugSprite.setPosition(cam.position.x, cam.position.y);
 		
 		spriteBatch.begin();
-		debugSprite.draw(spriteBatch);
+		//debugSprite.draw(spriteBatch);
 		
 		for (Entity e: worldEntities) {
 			e.render(spriteBatch);
@@ -188,9 +175,12 @@ public class GameMap {
 		
 		spriteBatch.end();
 		
-		tileMapRenderer.render(cam);
-		
+		debugRenderer.render( physicsWorld, cam.combined.scale(Config.PIXELS_PER_METER, Config.PIXELS_PER_METER,
+				Config.PIXELS_PER_METER) );
 		
 	}
 
+	public void addEntity(Entity e) {
+		this.worldEntities.add(e);
+	}
 }
