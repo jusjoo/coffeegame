@@ -43,7 +43,7 @@ public class Main implements ApplicationListener{
 		// scale the viewport according to our metric scale
 		cam.viewportHeight = cam.viewportHeight/Config.PIXELS_PER_METER;
 		cam.viewportWidth = cam.viewportWidth/Config.PIXELS_PER_METER;
-				
+		
 		cam.position.x = 0;
 		cam.position.y = 0;
 		
@@ -149,9 +149,8 @@ public class Main implements ApplicationListener{
 
 	@Override
 	public void resize(int width, int height) {
-		cam.viewportHeight = height;
-		cam.viewportWidth = width;
-		
+		cam.viewportHeight = cam.viewportHeight/Config.PIXELS_PER_METER;
+		cam.viewportWidth = cam.viewportWidth/Config.PIXELS_PER_METER;
 	}
 	
 	@Override
