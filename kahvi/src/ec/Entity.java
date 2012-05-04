@@ -39,6 +39,7 @@ public class Entity{
 
 	public Entity() {
 		transform = new Transform();
+		
 	}
 	
 	public void setTransform(Transform t) {

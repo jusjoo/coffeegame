@@ -35,9 +35,10 @@ public class Main implements ApplicationListener{
 	
 	@Override
 	public void create() {
-		
+		// draw all Sprites to this batch
 		spriteBatch = new SpriteBatch();
 		
+		// our camera, move this with the player
 		cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
 		// scale the viewport according to our metric scale
@@ -47,6 +48,7 @@ public class Main implements ApplicationListener{
 		cam.position.x = 0;
 		cam.position.y = 0;
 		
+		// not sure what this does
 		cam.update();
 
 		spriteBatch.setProjectionMatrix(cam.combined);
