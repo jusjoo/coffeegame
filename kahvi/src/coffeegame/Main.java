@@ -12,8 +12,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
@@ -74,18 +76,39 @@ public class Main implements ApplicationListener{
 		
 		
 		// testing
+		// first entity is a static sprite with a body
 		Vector2 position = new Vector2(0f,0f);
 		Entity e = new Entity();
-   
 		new SpriteRenderer(e, new Sprite(texture));
 		new PhysicsBody(e, ShapeFactory.createBox(texture.getWidth(), texture.getHeight()), currentMap.physicsWorld, position, true );
 		currentMap.addEntity(e);
 		
+		// second entity is a sprite with a dynamic body
 		Entity e2 = new Entity();
 		Vector2 pos2 = new Vector2(1.5f,3);
 		new SpriteRenderer(e2, new Sprite(texture));
 		new PhysicsBody(e2, ShapeFactory.createBox(texture.getWidth(), texture.getHeight()), currentMap.physicsWorld, pos2, false);
 		currentMap.addEntity(e2);
+		
+		// third entity is animated
+		Entity e3 = new Entity();
+		Vector2 pos3 = new Vector2(-1.02f, 3f);
+		
+		Texture tex = new Texture(Gdx.files.internal("assets/animations/testSprite.png"));
+		TextureRegion[][] tmp = TextureRegion.split(tex, 32, 32);
+		TextureRegion[] frames = new TextureRegion[4 * 1];
+        int index = 0;
+        for (int i = 0; i < 1; i++) {
+                for (int j = 0; j < 4; j++) {
+                        frames[index++] = tmp[i][j];
+                }
+        }
+        
+		Animation animation = new Animation(1/10f, frames);
+		
+		new SpriteAnimator(e3, animation, new Vector2(0,0));
+		new PhysicsBody(e3, ShapeFactory.createBox(32, 32), currentMap.physicsWorld, pos3, false);
+		currentMap.addEntity(e3);
 		
 	}
 
