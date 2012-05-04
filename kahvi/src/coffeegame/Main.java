@@ -50,7 +50,7 @@ public class Main implements ApplicationListener{
 		cam.position.x = 0;
 		cam.position.y = 0;
 		
-		// not sure what this does
+		// not sure what this does, actually
 		cam.update();
 
 		spriteBatch.setProjectionMatrix(cam.combined);
@@ -124,10 +124,11 @@ public class Main implements ApplicationListener{
 		
 	}
 
-	@Override
+	/**
+	 * Render the game
+	 */
 	public void render() {
-		
-		
+		// clear screen
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 	    
 		
@@ -162,6 +163,9 @@ public class Main implements ApplicationListener{
 		
 	}
 
+	/**
+	 * Update the game state
+	 */
 	private void update() {
 		
 		currentMap.physicsWorld.step(1/60f, 3, 3);
