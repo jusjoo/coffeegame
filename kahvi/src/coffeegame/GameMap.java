@@ -72,6 +72,8 @@ public class GameMap {
 		SimpleTileAtlas atlas = new SimpleTileAtlas(map, Gdx.files.internal("assets/maps/"));
 		tileMapRenderer = new TileMapRenderer(map, atlas, 50, 50);
 		
+		atlas.flipRegions(false, true);
+		
 		createGround();
 		
 	}
@@ -101,8 +103,10 @@ public class GameMap {
 							Entity entity = new Entity();
 							PolygonShape shape = ShapeFactory.createBox(16, 16);
 							
+							Vector2 position = new Vector2(x * tileSize / Config.PIXELS_PER_METER, y * tileSize / Config.PIXELS_PER_METER);
 							
-							new PhysicsBody(entity, shape, physicsWorld, new Vector2(x * tileSize, y * tileSize), true);
+							
+							new PhysicsBody(entity, shape, physicsWorld, position, true);
 							
 							
 							//new BodyComponent(null, new Vector2(tileSize + tileSize*tilesSkipped, tileSize), true, 1.0f, false, shape, false);
