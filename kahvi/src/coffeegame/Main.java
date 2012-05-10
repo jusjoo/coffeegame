@@ -79,7 +79,7 @@ public class Main implements ApplicationListener{
 		        texture = new Texture(imageFileHandle);
 		    }
 		
-		currentMap = new GameMap(Gdx.files.internal("assets/maps/testimap.tmx"));
+		currentMap = new GameMap(Gdx.files.internal("assets/maps/untitled.tmx"));
 		
 		
 		// testing

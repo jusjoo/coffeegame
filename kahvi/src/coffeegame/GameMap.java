@@ -99,13 +99,13 @@ public class GameMap {
 						
 
 							Entity entity = new Entity();
-							PolygonShape shape = new PolygonShape();
+							PolygonShape shape = ShapeFactory.createBox(16, 16);
 							
-							shape.setAsBox(tileSize / (2 * Config.PIXELS_PER_METER), tileSize / (2 * Config.PIXELS_PER_METER));
 							
 							new PhysicsBody(entity, shape, physicsWorld, new Vector2(x * tileSize, y * tileSize), true);
 							
-									//new BodyComponent(null, new Vector2(tileSize + tileSize*tilesSkipped, tileSize), true, 1.0f, false, shape, false);
+							
+							//new BodyComponent(null, new Vector2(tileSize + tileSize*tilesSkipped, tileSize), true, 1.0f, false, shape, false);
 							//tile.addToWorld(world, new Vector2(x*tileSize - (tilesSkipped)*tileSize/2 , -y*tileSize+map.height*tileSize));
 									
 							worldEntities.add(entity);
@@ -177,7 +177,7 @@ public class GameMap {
 		
 		debugRenderer.render( physicsWorld, cam.combined.scale(Config.PIXELS_PER_METER, Config.PIXELS_PER_METER,
 				Config.PIXELS_PER_METER) );
-		
+				
 	}
 
 	public void addEntity(Entity e) {
