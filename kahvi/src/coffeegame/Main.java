@@ -81,7 +81,6 @@ public class Main implements ApplicationListener{
 		
 		currentMap = new GameMap(Gdx.files.internal("assets/maps/untitled.tmx"));
 		
-		
 		// testing
 		// first entity is a static sprite with a body
 		Vector2 position = new Vector2(0f,0f);

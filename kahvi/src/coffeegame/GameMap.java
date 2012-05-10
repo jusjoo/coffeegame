@@ -103,7 +103,9 @@ public class GameMap {
 							Entity entity = new Entity();
 							PolygonShape shape = ShapeFactory.createBox(16, 16);
 							
-							Vector2 position = new Vector2(x * tileSize / Config.PIXELS_PER_METER, y * tileSize / Config.PIXELS_PER_METER);
+							int fixedY = -y+map.height-1; //korjataan korkeus kuvaajassa
+							
+							Vector2 position = new Vector2(x * tileSize / Config.PIXELS_PER_METER, fixedY * tileSize / Config.PIXELS_PER_METER);
 							
 							
 							new PhysicsBody(entity, shape, physicsWorld, position, true);
