@@ -72,7 +72,7 @@ public class GameMap {
 		SimpleTileAtlas atlas = new SimpleTileAtlas(map, Gdx.files.internal("assets/maps/"));
 		tileMapRenderer = new TileMapRenderer(map, atlas, 50, 50);
 		
-		atlas.flipRegions(false, true);
+		
 		
 		createGround();
 		
