@@ -2,6 +2,7 @@ package coffeegame;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Camera;
@@ -19,6 +20,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
+import dynamicmusic.MusicPlayer;
+
 import ec.Entity;
 
 
@@ -32,6 +35,10 @@ public class Main implements ApplicationListener{
 	private Texture texture;
 
 	private Mesh mesh;
+
+	private MusicPlayer musicPlayer;
+
+	private float keyWasPressed;
 
 	
 	
@@ -110,6 +117,10 @@ public class Main implements ApplicationListener{
 		new PhysicsBody(e3, ShapeFactory.createBox(32, 32), currentMap.physicsWorld, pos3, false);
 		currentMap.addEntity(e3);
 		
+		
+		// test the music player
+		musicPlayer = new MusicPlayer();
+		
 	}
 
 	@Override
@@ -168,11 +179,15 @@ public class Main implements ApplicationListener{
 	 */
 	private void update() {
 		
+		
+		
 		currentMap.physicsWorld.step(1/60f, 3, 3);
 		
 		float deltaTime = Gdx.graphics.getDeltaTime();
 		
 		currentMap.update(deltaTime);
+		handleDebugInput(deltaTime);
+		musicPlayer.update(deltaTime);
 		
 	}
 
@@ -194,9 +209,22 @@ public class Main implements ApplicationListener{
 		
 	}
 	
+	private void handleDebugInput(float deltaTime) {
+		if (keyWasPressed <= 0) {
+			if (Gdx.input.isKeyPressed(Input.Keys.P)) musicPlayer.play();
+			
+			if (Gdx.input.isKeyPressed(Input.Keys.F8)) musicPlayer.setExcitement(musicPlayer.getExcitementLevel() + 1);
+			if (Gdx.input.isKeyPressed(Input.Keys.F7)) musicPlayer.setExcitement(musicPlayer.getExcitementLevel() - 1);
+			
+			keyWasPressed = 0.2f;
+		} else {
+			keyWasPressed -= deltaTime;
+		}
+	}
 	
 	public static void main (String[] args) {
 		new LwjglApplication(new Main(), "Game", Config.windowSizeX, Config.windowSizeY, false);
 	}
 
+	
 }
