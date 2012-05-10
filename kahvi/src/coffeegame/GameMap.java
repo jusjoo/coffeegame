@@ -101,18 +101,13 @@ public class GameMap {
 						
 
 							Entity entity = new Entity();
-							PolygonShape shape = ShapeFactory.createBox(16, 16);
+							PolygonShape shape = ShapeFactory.createBox(tileSize, tileSize);
 							
 							int fixedY = -y+map.height-1; //korjataan korkeus kuvaajassa
 							
-							Vector2 position = new Vector2(x * tileSize / Config.PIXELS_PER_METER, fixedY * tileSize / Config.PIXELS_PER_METER);
-							
+							Vector2 position = new Vector2(x * tileSize / Config.PIXELS_PER_METER, fixedY * tileSize / Config.PIXELS_PER_METER);					
 							
 							new PhysicsBody(entity, shape, physicsWorld, position, true);
-							
-							
-							//new BodyComponent(null, new Vector2(tileSize + tileSize*tilesSkipped, tileSize), true, 1.0f, false, shape, false);
-							//tile.addToWorld(world, new Vector2(x*tileSize - (tilesSkipped)*tileSize/2 , -y*tileSize+map.height*tileSize));
 									
 							worldEntities.add(entity);
 							
@@ -123,43 +118,6 @@ public class GameMap {
 	}
 	
 
-
-
-
-	/**
-	 * Creates a new PolygonShape from a given String of coordinates.
-	 * @param polygon
-	 * @return
-	 */
-	private Vector2[] getPolygonVertices(String polygon) {
-		
-		
-		
-		
-		ArrayList<Vector2> vectors = new ArrayList<Vector2>();
-		
-		for (String piece :polygon.split(" ")) {
-			String[] coords = piece.split(",");
-			Vector2 vector = new Vector2(Float.parseFloat(coords[0]), Float.parseFloat(coords[1]));
-			
-			vectors.add(vector); 
-			
-		}
-		
-
-		
-		Vector2[] array = new Vector2[vectors.size()];
-		vectors.toArray(array);
-		
-			
-
-		
-		
-		return array;
-		
-	}
-
-
 	public void update(float deltaTime) {
 		for (Entity e:worldEntities) {
 			e.update(deltaTime);
@@ -169,11 +127,8 @@ public class GameMap {
 	
 	public void render(OrthographicCamera cam, SpriteBatch spriteBatch) {
 		
-		
-		//debugSprite.setPosition(cam.position.x, cam.position.y);
-		
+		tileMapRenderer.render(cam);
 		spriteBatch.begin();
-		//debugSprite.draw(spriteBatch);
 		
 		for (Entity e: worldEntities) {
 			e.render(spriteBatch);
