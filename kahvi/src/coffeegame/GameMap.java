@@ -55,22 +55,17 @@ public class GameMap {
 	public GameMap(FileHandle mapFile) {
 		
 		worldEntities = new ArrayList<Entity>();
-		debugTexture = new Texture(Gdx.files.internal("assets/maps/mrEggEverything.png"));
-		debugSprite = new Sprite(debugTexture);
 		
 		// create physics stuff
 		physicsWorld = new World(new Vector2(0.0f, Config.physicsWorldGravity), true);
 		physicsWorld.setContactListener(new KahviContactListener());
-		
-		
-		debugCam = new OrthographicCamera( 24, 16 );
+
 		debugRenderer = new Box2DDebugRenderer(true,true,true,true);
-		
-		
+				
 		// load map
 		map = TiledLoader.createMap(mapFile);
 		SimpleTileAtlas atlas = new SimpleTileAtlas(map, Gdx.files.internal("assets/maps/"));
-		tileMapRenderer = new TileMapRenderer(map, atlas, 50, 50);
+		tileMapRenderer = new TileMapRenderer(map, atlas, 5, 5);
 		
 		
 		
