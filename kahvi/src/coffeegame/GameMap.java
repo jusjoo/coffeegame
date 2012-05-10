@@ -23,6 +23,7 @@ import com.badlogic.gdx.graphics.g2d.tiled.TiledMap;
 import com.badlogic.gdx.graphics.g2d.tiled.TiledObject;
 import com.badlogic.gdx.graphics.g2d.tiled.TiledObjectGroup;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -105,7 +106,9 @@ public class GameMap {
 							
 							int fixedY = -y+map.height-1; //korjataan korkeus kuvaajassa
 							
-							Vector2 position = new Vector2(x * tileSize / Config.PIXELS_PER_METER, fixedY * tileSize / Config.PIXELS_PER_METER);					
+							// mukaillaan collider box sopivaan kohtaan
+							Vector2 position = new Vector2(	(x * tileSize + tileSize/2) / Config.PIXELS_PER_METER ,
+															(fixedY * tileSize + tileSize/2) / Config.PIXELS_PER_METER);					
 							
 							new PhysicsBody(entity, shape, physicsWorld, position, true);
 									
@@ -127,9 +130,21 @@ public class GameMap {
 	
 	public void render(OrthographicCamera cam, SpriteBatch spriteBatch) {
 		
-		tileMapRenderer.render(cam);
-		spriteBatch.begin();
+		OrthographicCamera camera = new OrthographicCamera(Gdx.graphics.getWidth(),
+				Gdx.graphics.getHeight());
 		
+		tileMapRenderer.getProjectionMatrix().set(camera.combined);
+		
+		Vector3 tmp = new Vector3();
+		tmp.set(0, 0, 0);
+		camera.unproject(tmp);
+ 
+		tileMapRenderer.render((int) tmp.x, (int) tmp.y,
+				Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+		//
+		spriteBatch.begin();
+			
 		for (Entity e: worldEntities) {
 			e.render(spriteBatch);
 		}
