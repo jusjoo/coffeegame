@@ -81,13 +81,7 @@ public class Main implements ApplicationListener{
 		
 		currentMap = new GameMap(Gdx.files.internal("assets/maps/untitled.tmx"));
 		
-		// testing
-		// first entity is a static sprite with a body
-		Vector2 position = new Vector2(0f,0f);
-		Entity e = new Entity();
-		new SpriteRenderer(e, new Sprite(texture));
-		new PhysicsBody(e, ShapeFactory.createBox(texture.getWidth(), texture.getHeight()), currentMap.physicsWorld, position, true );
-		currentMap.addEntity(e);
+
 		
 		// second entity is a sprite with a dynamic body
 		Entity e2 = new Entity();
