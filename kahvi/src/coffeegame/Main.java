@@ -27,21 +27,13 @@ import ec.Entity;
 
 public class Main implements ApplicationListener{
 
-	private SpriteBatch spriteBatch;
-	
+	private SpriteBatch spriteBatch;	
 	private OrthographicCamera cam;
 	private GameMap currentMap;
-
 	private Texture texture;
-
-	private Mesh mesh;
-
 	private MusicPlayer musicPlayer;
+	private float keyWasPressed; //ei liikaa napinpainalluksia
 
-	private float keyWasPressed;
-
-	
-	
 	@Override
 	public void create() {
 		// draw all Sprites to this batch
@@ -57,39 +49,14 @@ public class Main implements ApplicationListener{
 		cam.position.x = 0;
 		cam.position.y = 0;
 		
-		// not sure what this does, actually
+		// not sure what this does, actually (object scaling?)
 		cam.update();
 
 		spriteBatch.setProjectionMatrix(cam.combined);
-
-		
-		 if (mesh == null) {
-		        mesh = new Mesh(false, 3, 3, 
-		                new VertexAttribute(Usage.Position, 3, "a_position"),
-		                new VertexAttribute(Usage.ColorPacked, 4, "a_color"),
-		                new VertexAttribute(Usage.TextureCoordinates, 2, "a_texCoords"));
-
-		        mesh.setVertices(new float[] { -0.5f, -0.5f, 0, Color.toFloatBits(255, 0, 0, 255), 0, 1,
-		                                       0.5f, -0.5f, 0, Color.toFloatBits(0, 255, 0, 255), 1, 1,
-		                                       0, 0.5f, 0, Color.toFloatBits(0, 0, 255, 255), 0.5f, 0 });
-		                                       
-		        mesh.setIndices(new short[] { 0, 1, 2 });
-
-		        FileHandle imageFileHandle = Gdx.files.internal("assets/maps/blank.png"); 
-		        texture = new Texture(imageFileHandle);
-		    }
 		
 		currentMap = new GameMap(Gdx.files.internal("assets/maps/untitled.tmx"));
 		
 
-		
-		// second entity is a sprite with a dynamic body
-		Entity e2 = new Entity();
-		Vector2 pos2 = new Vector2(1.5f,3);
-		new SpriteRenderer(e2, new Sprite(texture));
-		new PhysicsBody(e2, ShapeFactory.createBox(texture.getWidth(), texture.getHeight()), currentMap.physicsWorld, pos2, false);
-		currentMap.addEntity(e2);
-		
 		// third entity is animated
 		Entity e3 = new Entity();
 		Vector2 pos3 = new Vector2(-1.02f, 3f);
@@ -142,21 +109,9 @@ public class Main implements ApplicationListener{
 		Gdx.graphics.setTitle(Integer.toString(Gdx.graphics.getFramesPerSecond()) 
 				+ " (" + mouse.x + ", " + mouse.y + ")");
 		
-		/*float colourMultiplier = 1;
-		Gdx.gl.glClearColor(0.5f*colourMultiplier, 0.7f*colourMultiplier, 0.88f*colourMultiplier, 1.0f);
-		
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		
-		cam.update();*/
 		
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 	    Gdx.graphics.getGL10().glEnable(GL10.GL_TEXTURE_2D);
-
-		
-		
-	   
-		
-		
 		
 		// check if we have a map loaded and game is not paused
 		if (currentMap != null) {

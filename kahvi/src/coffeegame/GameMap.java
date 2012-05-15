@@ -137,7 +137,6 @@ public class GameMap {
 		tileMapRenderer.render((int) tmp.x, (int) tmp.y,
 				Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-		//
 		spriteBatch.begin();
 			
 		for (Entity e: worldEntities) {
