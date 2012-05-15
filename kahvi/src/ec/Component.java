@@ -30,14 +30,16 @@ public class Component {
 		Debug.log("Sent data: " + value);
 	}
 	
-	/*
+	/**
 	 * Subscribe this component to parent's messages of messageType
+	 * 
+	 * If overriding this, make sure you call parent.subscribe()
 	 */
 	public void subscribe(String messageType) {
 		parent.subscribe(this, messageType);
 	}
 	
-	/*
+	/**
 	 * Broadcast a message to the entity
 	 */
 	public void broadcast(String messageType, Object value) {
