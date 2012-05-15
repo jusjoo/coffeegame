@@ -46,6 +46,7 @@ public class OfficeGuyInput extends Component{
         keys.get(keys.put(Keys.JUMP, false));
     }
 
+    //TODO: Odottelee Movementin toteutusta
 	private void processInput(){
 		if(keys.get(Keys.LEFT)){
 			
@@ -62,6 +63,5 @@ public class OfficeGuyInput extends Component{
 		processInput();
 	}
 
-	
 	
 }
