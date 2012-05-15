@@ -5,34 +5,29 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.VertexAttribute;
-import com.badlogic.gdx.graphics.VertexAttributes.Usage;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-
 import dynamicmusic.MusicPlayer;
-
-import ec.Entity;
 
 
 public class Main implements ApplicationListener{
 
+	// Draw all sprites in this, it is sent down with all render() calls.
 	private SpriteBatch spriteBatch;	
+	
+	// World camera, draws everything but tiledMapRenderer
 	private OrthographicCamera cam;
+	
+	// Map object, that holds all entities, tiles etc.
 	private GameMap currentMap;
-	private Texture texture;
+	
+	// Dynamic music player
 	private MusicPlayer musicPlayer;
-	private float keyWasPressed; //ei liikaa napinpainalluksia
+	
+	// Handles the delay between debug keystrokes.
+	private float keyWasPressed; 
 
 	@Override
 	public void create() {
@@ -46,38 +41,19 @@ public class Main implements ApplicationListener{
 		cam.viewportHeight = cam.viewportHeight/Config.PIXELS_PER_METER;
 		cam.viewportWidth = cam.viewportWidth/Config.PIXELS_PER_METER;
 		
+
 		cam.position.x = 0;
 		cam.position.y = 0;
 		
-		// not sure what this does, actually (object scaling?)
+		// updates the camera's viewport scaling etc.
 		cam.update();
 
+		// gets the projection matrix from our cam, so sprites drawn in spriteBatch are scaled correctly
 		spriteBatch.setProjectionMatrix(cam.combined);
 		
+		// create the GameMap for testing
 		currentMap = new GameMap(Gdx.files.internal("assets/maps/untitled.tmx"));
-		
-
-		// third entity is animated
-		Entity e3 = new Entity();
-		Vector2 pos3 = new Vector2(-1.02f, 3f);
-		
-		Texture tex = new Texture(Gdx.files.internal("assets/animations/testSprite.png"));
-		TextureRegion[][] tmp = TextureRegion.split(tex, 32, 32);
-		TextureRegion[] frames = new TextureRegion[4 * 1];
-        int index = 0;
-        for (int i = 0; i < 1; i++) {
-                for (int j = 0; j < 4; j++) {
-                        frames[index++] = tmp[i][j];
-                }
-        }
-        
-		Animation animation = new Animation(1/10f, frames);
-		
-		new SpriteAnimator(e3, animation, new Vector2(0,0));
-		new PhysicsBody(e3, ShapeFactory.createBox(32, 32), currentMap.physicsWorld, pos3, false);
-		currentMap.addEntity(e3);
-		
-		
+					
 		// test the music player
 		musicPlayer = new MusicPlayer();
 		
@@ -102,16 +78,16 @@ public class Main implements ApplicationListener{
 		// clear screen
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 	    
-		
+		// get the mouse position in pixels
 	    Vector2 mouse = new Vector2(Gdx.input.getX() + cam.position.x - Gdx.graphics.getWidth()/2, 
 	    							Gdx.input.getY() + cam.position.y - Gdx.graphics.getHeight()/2);
 	    
+	    // convert pixels to meter coordinates
+	    mouse.mul(1/Config.PIXELS_PER_METER);
+	    
+	    // set the mouse coordinates as title, for debugging
 		Gdx.graphics.setTitle(Integer.toString(Gdx.graphics.getFramesPerSecond()) 
 				+ " (" + mouse.x + ", " + mouse.y + ")");
-		
-		
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-	    Gdx.graphics.getGL10().glEnable(GL10.GL_TEXTURE_2D);
 		
 		// check if we have a map loaded and game is not paused
 		if (currentMap != null) {
@@ -126,23 +102,27 @@ public class Main implements ApplicationListener{
 	 * Update the game state
 	 */
 	private void update() {
-		
-		
-		
+		// Simulate one step of the physics world
 		currentMap.physicsWorld.step(1/60f, 3, 3);
 		
+		// deltaTime is the time between each frame
 		float deltaTime = Gdx.graphics.getDeltaTime();
 		
+		// update map and it's entities
 		currentMap.update(deltaTime);
+		
+		// handle debug input
 		handleDebugInput(deltaTime);
+		
+		// update the music player
 		musicPlayer.update(deltaTime);
 		
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		cam.viewportHeight = cam.viewportHeight/Config.PIXELS_PER_METER;
-		cam.viewportWidth = cam.viewportWidth/Config.PIXELS_PER_METER;
+		cam.viewportHeight = height/Config.PIXELS_PER_METER;
+		cam.viewportWidth = width/Config.PIXELS_PER_METER;
 	}
 	
 	@Override
@@ -157,10 +137,12 @@ public class Main implements ApplicationListener{
 		
 	}
 	
+	/*
+	 * Put all debug cheat input thingies here.
+	 */
 	private void handleDebugInput(float deltaTime) {
 		if (keyWasPressed <= 0) {
 			if (Gdx.input.isKeyPressed(Input.Keys.P)) musicPlayer.play();
-			
 			if (Gdx.input.isKeyPressed(Input.Keys.F8)) musicPlayer.setExcitement(musicPlayer.getExcitementLevel() + 1);
 			if (Gdx.input.isKeyPressed(Input.Keys.F7)) musicPlayer.setExcitement(musicPlayer.getExcitementLevel() - 1);
 			
@@ -170,6 +152,9 @@ public class Main implements ApplicationListener{
 		}
 	}
 	
+	/*
+	 * Launches the game!
+	 */
 	public static void main (String[] args) {
 		new LwjglApplication(new Main(), "Game", Config.windowSizeX, Config.windowSizeY, false);
 	}
