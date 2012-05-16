@@ -5,7 +5,13 @@ import ec.Entity;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.badlogic.gdx.Gdx;
 
+/**
+ * Handles player input.
+ * 
+ * Broadcasts messages: "moveLeft", "moveRight", "jump" as null.
+ */
 public class OfficeGuyInput extends Component{
 	
 	enum Keys {
@@ -46,21 +52,27 @@ public class OfficeGuyInput extends Component{
         keys.get(keys.put(Keys.JUMP, false));
     }
 
-    //TODO: Odottelee Movementin toteutusta
-	private void processInput(){
+
+	private void sendOutput(){
 		if(keys.get(Keys.LEFT)){
-			
+			broadcast("moveLeft", null);
 		}
 		if(keys.get(Keys.RIGHT)){
-			
+			broadcast("moveRight", null);
 		}
 		if(keys.get(Keys.JUMP)){
-			
+			broadcast("jump", null);
 		}
+	}
+	
+	// TODO: handle actual keypresses
+	private void processInput() {
+		
 	}
 	
 	public void update(float deltaTime) {
 		processInput();
+		sendOutput();
 	}
 
 	
