@@ -14,4 +14,6 @@ public class Config {
 	public static final float playerMovementSpeed = 5;
 	
 	public static final int playerJumpButton = Keys.SPACE;
+	public static final int playerLeftButton = Keys.LEFT;
+	public static final int playerRightButton = Keys.RIGHT;
 }
