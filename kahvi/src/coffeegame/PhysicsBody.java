@@ -13,6 +13,14 @@ import com.badlogic.gdx.physics.box2d.World;
 import ec.Component;
 import ec.Entity;
 
+
+/**
+ * Creates physics body for the entity, and sets the entity's position to
+ * follow the body's position in the physics world
+ * 
+ * Handles message: "applyLinearImpulse" as Vector2
+ */
+
 public class PhysicsBody extends Component {
 
 	private FixtureDef bodyFixtureDef;
@@ -54,6 +62,11 @@ public class PhysicsBody extends Component {
 		body.setActive(true);
 	}
 
-	
+	public void handleMessage(String name, Object value) {
+		// handle linear impulse
+		if (name == "applyLinearImpulse" && value != null && value instanceof Vector2) {
+			body.applyLinearImpulse( (Vector2)value, body.getPosition());
+		}
+	}
 	
 }
