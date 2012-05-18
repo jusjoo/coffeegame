@@ -44,12 +44,9 @@ public class GameMap {
 	private TiledMap map;
 	private TileMapRenderer tileMapRenderer;
 	
-	private final String GROUND_LAYER = "Ground";
+	private final String GROUND_LAYER_NAME = "Ground";
 	
 	private ArrayList<Entity> worldEntities;
-	
-	private Texture debugTexture;
-	private Sprite debugSprite;
 	
 	private int tileSize = Config.tileSize;
 	
@@ -76,7 +73,7 @@ public class GameMap {
 		// find the correct ground layer
 		TiledLayer layer = null;
 		for (TiledLayer l :map.layers) {
-			if(l.name.equals(GROUND_LAYER)){
+			if(l.name.equals(GROUND_LAYER_NAME)){
 				layer = l;
 				break;
 			}

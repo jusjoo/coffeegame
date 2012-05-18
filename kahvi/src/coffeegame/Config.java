@@ -1,5 +1,7 @@
 package coffeegame;
 
+import com.badlogic.gdx.Input.Keys;
+
 public class Config {
 
 	public static final int windowSizeX = 1024;
@@ -10,4 +12,6 @@ public class Config {
 	public static final int tileSize = 32;
 	public static final float physicsLinearDamping = 3.0f;
 	public static final float playerMovementSpeed = 5;
+	
+	public static final int playerJumpButton = Keys.SPACE;
 }
