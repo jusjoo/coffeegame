@@ -63,8 +63,11 @@ public class PhysicsBody extends Component {
 	}
 
 	public void handleMessage(String name, Object value) {
-		// handle linear impulse
+		
+		// handle linear impulse messages
 		if (name == "applyLinearImpulse" && value != null && value instanceof Vector2) {
+			
+			// cast value to Vector2 and apply linear impulse to the body's center
 			body.applyLinearImpulse( (Vector2)value, body.getPosition());
 		}
 	}

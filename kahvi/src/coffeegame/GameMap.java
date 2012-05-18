@@ -150,4 +150,17 @@ public class GameMap {
 	public void addEntity(Entity e) {
 		this.worldEntities.add(e);
 	}
+	
+	/**
+	 * Returns the player entity with necessary input components attached
+	 */
+	private Entity createPlayer(Vector2 position) {
+		Entity e = new Entity();
+		
+		
+		
+		
+		
+		return e;
+	}
 }
