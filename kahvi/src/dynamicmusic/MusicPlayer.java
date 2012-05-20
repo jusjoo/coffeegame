@@ -1,6 +1,7 @@
 package dynamicmusic;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -11,20 +12,23 @@ import ec.Debug;
 public class MusicPlayer {
 
 	
-	private ArrayList<Sound> musicfiles;
+	private ArrayList<Sound> soundfiles;
+	
 	private Sound addSnare;
+	
 	private int excitement;
 	private Sound addHats;
+	
 	private AssetManager manager;
+	
 	private boolean isReady;
 	
-	private float blockLength;
-	
-
+	private HashMap<Sound, Long> playingSoundIDs;
 	
 	
 	public MusicPlayer() {
-		musicfiles = new ArrayList<Sound>();
+		soundfiles = new ArrayList<Sound>();
+		playingSoundIDs = new HashMap<Sound, Long>();
 		
 		manager = new AssetManager();
 		manager.load("assets/music/beat.ogg", Sound.class);
@@ -36,28 +40,32 @@ public class MusicPlayer {
 		
 	}
 
-	private void playMuted() {
-		for (Sound s : musicfiles) {
-			s.setVolume(s.play(), 1);
-			
-			
-		}
-		
-	}
-	
-	public void play() {
 
+	
+	/*
+	 * Starts playing the whole sound bank
+	 */
+	public void play() {
 		if (isReady) {
-			for (Sound m : musicfiles) {
-				m.setVolume(m.play(), 1);
-					
+			for (Sound s : soundfiles) {
+				long id = s.play();
+				s.setVolume(id, 1);
+				s.setLooping(id, true);
+				playingSoundIDs.put(s, id);
 			}
 		}
 	}
 	
+	/*
+	 * Stops playing all sounds
+	 */
 	public void stop() {
-		for (Sound m : musicfiles) {
-			m.stop();
+		// clear all play ID's
+		playingSoundIDs.clear();
+		
+		// stop all sounds
+		for (Sound s : soundfiles) {
+			s.stop();
 		}
 	}
 	
@@ -77,11 +85,11 @@ public class MusicPlayer {
 					&& manager.isLoaded("assets/music/addsnare.ogg") 
 					&& manager.isLoaded("assets/music/addhats.ogg") ) {
 				
-				musicfiles.add(manager.get("assets/music/beat.ogg", Sound.class));
+				soundfiles.add(manager.get("assets/music/beat.ogg", Sound.class));
 				addSnare = manager.get("assets/music/addsnare.ogg", Sound.class);
 				addHats = manager.get("assets/music/addhats.ogg", Sound.class);
-				musicfiles.add(addSnare);
-				musicfiles.add(addHats);
+				soundfiles.add(addSnare);
+				soundfiles.add(addHats);
 				
 				isReady = true;
 				

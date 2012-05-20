@@ -137,7 +137,7 @@ public class GameMap {
 		
 		spriteBatch.end();
 		
-		debugRenderer.render( physicsWorld, cam.combined.scale(Config.PIXELS_PER_METER, Config.PIXELS_PER_METER,
+		debugRenderer.render( physicsWorld, camera.combined.scale(Config.PIXELS_PER_METER, Config.PIXELS_PER_METER,
 				Config.PIXELS_PER_METER) );
 				
 	}

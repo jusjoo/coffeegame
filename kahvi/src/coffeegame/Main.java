@@ -38,8 +38,8 @@ public class Main implements ApplicationListener{
 		cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
 		// scale the viewport according to our metric scale
-		cam.viewportHeight = cam.viewportHeight/Config.PIXELS_PER_METER;
-		cam.viewportWidth = cam.viewportWidth/Config.PIXELS_PER_METER;
+		//cam.viewportHeight = cam.viewportHeight/Config.PIXELS_PER_METER;
+		//cam.viewportWidth = cam.viewportWidth/Config.PIXELS_PER_METER;
 		
 
 		cam.position.x = 0;
