@@ -12,22 +12,20 @@ import ec.Debug;
 
 public class MusicPlayer {
 
-	// all sound files with the excitement level they're triggered at
-	private HashMap<Sound, Integer> soundfiles;
+
 	
 	private int excitement;
 	
 	private AssetManager manager;
 	
 	private boolean isReady;
-	
-	private HashMap<Sound, Long> playingSoundIDs;
+
+	private DynamicSequencer sequencer;
+
 	
 	
 	public MusicPlayer() {
-		soundfiles = new HashMap<Sound, Integer>();
-		playingSoundIDs = new HashMap<Sound, Long>();
-		
+		sequencer = new DynamicSequencer();
 		manager = new AssetManager();
 		manager.load("assets/music/beat.ogg", Sound.class);
 		manager.load("assets/music/addsnare.ogg", Sound.class);
@@ -35,7 +33,6 @@ public class MusicPlayer {
 		
 		//manager started loading resources, set state to not ready
 		isReady = false;
-		
 	}
 
 
@@ -45,26 +42,16 @@ public class MusicPlayer {
 	 */
 	public void play() {
 		if (isReady) {
-			for (Sound s : soundfiles.keySet()) {
-				long id = s.play(0f);
-				s.setLooping(id, true);
-				playingSoundIDs.put(s, id);
-				Debug.log("sound playing");
-			}
+			sequencer.play();
 		}
+		
 	}
 	
 	/*
 	 * Stops playing all sounds
 	 */
 	public void stop() {
-		// clear all play ID's
-		playingSoundIDs.clear();
-		
-		// stop all sounds
-		for (Sound s : soundfiles.keySet()) {
-			s.stop();
-		}
+		sequencer.stop();
 	}
 	
 	public void setExcitement(int excitement) {
@@ -85,29 +72,12 @@ public class MusicPlayer {
 			
 		} else {
 			// else our assets are ready
-			
-			
-			// playing music?
-			if (!playingSoundIDs.isEmpty()) {
-				updateSoundVolumes();
-				
-				// excitement over 10, set pitch up one note
-				if (excitement >= 10) setPitch(1);
-			}
-
+			sequencer.update(deltaTime, excitement);
 		}
 	}
 
 
-	private void setPitch(int i) {
-		
-		float pitch = getPitch(i);
-		
-		for (Sound s :playingSoundIDs.keySet()) {
-			s.setPitch(playingSoundIDs.get(s), pitch);
-		}
-		
-	}
+
 
 
 
@@ -122,12 +92,9 @@ public class MusicPlayer {
 				&& manager.isLoaded("assets/music/addsnare.ogg") 
 				&& manager.isLoaded("assets/music/addhats.ogg") ) {
 			
-			soundfiles.put(manager.get("assets/music/beat.ogg", Sound.class), 0);
-			
-			soundfiles.put(manager.get("assets/music/addsnare.ogg", Sound.class), 3);
-		
-			soundfiles.put(manager.get("assets/music/addhats.ogg", Sound.class), 4);
-			
+			sequencer.addSound(manager.get("assets/music/beat.ogg", Sound.class), 0);	
+			sequencer.addSound(manager.get("assets/music/addsnare.ogg", Sound.class), 3);
+			sequencer.addSound(manager.get("assets/music/addhats.ogg", Sound.class), 4);
 			
 			isReady = true;
 			
@@ -136,28 +103,8 @@ public class MusicPlayer {
 
 
 
-	private void updateSoundVolumes() {
-		// go through all sounds
-		for (Sound s : soundfiles.keySet()) {
-			
-			// if global excitement level is higher than the sounds trigger level, we up the volume
-			if(excitement >= soundfiles.get(s)) {
-				// sound should be already playing, because we have synchronized play on all sounds
-				s.setVolume(playingSoundIDs.get(s), 1);
-			} 
-			// else we mute the sound
-			else {
-				s.setVolume(playingSoundIDs.get(s), 0);
-			}
-		}
-	}
+
 	
-	private float getPitch(int pitchInNotes) {
-		float pitch;
-		
-		pitch = (float) Math.pow(2.0, (pitchInNotes)/12.0);
-		Debug.log("Note Pitch: " + pitch);
-		return pitch;
-	}
+
 	
 }
